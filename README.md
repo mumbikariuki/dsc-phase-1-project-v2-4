@@ -1,310 +1,562 @@
-# Phase 1 Project Description
+##1.OVERVIEW
+
+Microsoft is taking a bold step into the world of filmmaking by establishing its movie studio. This decision was inspired by the success of prominent companies in creating original video content. However, Microsoft faces a significant challenge: they lack experience in the art of filmmaking. This is where my role comes in—to conduct research and uncover the current trends and success factors in the movie industry.
+
+BUSINESS UNDERSATNDING
+
+Microsoft's desire to venture into the film industry stems from observing the achievements of major corporations in the realm of original video content. Despite this ambition, Microsoft recognizes its lack of expertise in movie production. Consequently, they have entrusted me with the task of researching the current landscape of the movie industry. Specifically, I am tasked with identifying popular film genres and the key elements contributing to their success. This research aims to provide the foundation for Microsoft's informed decision-making in the making of successful films.
+
+DATA UNDERSTANDING AND ANALYSIS
+    SOURCE
+    We were provided with the following datasets 
+    1.bom.gross_movie.csv
+    2.im.db
+    DESCRIPTION
+    1.bom.gross_movie.csv
+    This file had data with the following tables 
+    title,studio,domestic_gross,foreign_gross,year
+    For our case we were interested with studio,domestic_gross,foreign_gross,year for exploration
+    2.im.db
+    This file had data with the following tables
+    movie_id,original_title,start_year,runtime_minutes,averagerating,numvotes,genres
+    VISUALIZATIONS
+    To analyze data I used scatter plots and bar graphs.
+    
+CONCLUSION
+     
+The recommendations we have provided, provide a strategic framework for the film and entertainment industry to excel in a changing global market.Focusing on content with ratings between 5.9 and 8.3 enhances viewer satisfaction and industry performance.Prioritizing genres like documentaries, comedy, fantasy, musical, and drama offers content creators a reliable path to success.
+
+2.COMMIT HISTORY
+
+
+3.ORGANISATION
+|-- dsc-phase-1-project-v2-4/
+|  |--datas/
+|  |  |--im.db
+|  |--ZippedData/
+|  |   |bom.movie_gross.csv.gz
+|  |--student.ipynb
+
+
+Microsoft
+4.NOTEBOOK
+9/15/23, 11:32 AM student - Jupyter Notebook
+localhost:8812/notebooks/student.ipynb# 1/12
+In [196]: 
+In [197]: 
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 3387 entries, 0 to 3386
+Data columns (total 5 columns):
+# Column Non-Null Count Dtype 
+--- ------ -------------- ----- 
+0 title 3387 non-null object 
+1 studio 3382 non-null object 
+2 domestic_gross 3359 non-null float64
+3 foreign_gross 2037 non-null object 
+4 year 3387 non-null int64 
+dtypes: float64(1), int64(1), object(3)
+memory usage: 132.4+ KB
+## Final Project Submission
+Please fill out:
+* Student name: MARYIMMACULATE MUMBI KARIUKI 
+* Student pace: full time
+* Scheduled project review date/time:Friday, September 15th,2023. 12.00 noon. 
+* Instructor name: Simon Karu
+* Blog post URL:
+# Importing the relevant modules required .
+# Import required libraries 
+import numpy as np
+import pandas as pd
+import sqlite3
+import datetime
+import csv
+# Import visualization libraries
+import matplotlib.pyplot as plt
+%matplotlib inline
+import seaborn as sns 
+# DATA EXPLORATION
+We have a dataset named bom.movie_gross.csv.gz and we need to look at how it is structured.
+To acheve this we get infomation about the dataset as shown below.
+#Using pandas, we are creating a dataFrame called "bom_movie_gross" and using it to directly read 
+bom_movie_gross = pd.read_csv('zippedData/bom.movie_gross.csv.gz')
+# Get information on each column's data types and data value counts as a starting point for cleani
+bom_movie_gross.info()
+# How will you id movies other than title? how will you do this in a smart way?
+Next we have to check how the data inside is stuctured.
+9/15/23, 11:32 AM student - Jupyter Notebook
+localhost:8812/notebooks/student.ipynb# 2/12
+In [198]: 
+In [199]: 
+Data cleaning
+In [200]: 
+In [201]: 
+In [202]: 
+Out[198]:
+domestic_gross year
+count 3.359000e+03 3387.000000
+mean 2.874585e+07 2013.958075
+std 6.698250e+07 2.478141
+min 1.000000e+02 2010.000000
+25% 1.200000e+05 2012.000000
+50% 1.400000e+06 2014.000000
+75% 2.790000e+07 2016.000000
+max 9.367000e+08 2018.000000
+Out[199]: count 3387.000000
+mean 2013.958075
+std 2.478141
+min 2010.000000
+25% 2012.000000
+50% 2014.000000
+75% 2016.000000
+max 2018.000000
+Name: year, dtype: float64
+Out[201]: 28
+Out[202]: 1350
+bom_movie_gross = pd.read_csv('zippedData/bom.movie_gross.csv.gz')
+# Get information on each column's data types and data value counts as a starting point for cleani
+bom_movie_gross.describe()
+A question arises.
+What's the relevance of this data?
+In other words when was this data collected?
+bom_movie_gross['year'].describe()
+What are we to do with missing values?
+First we check whether there exists missing values in our data and if they exist how many nuls are
+there
+# Function to check for missing values in a user-specified column of a DataFrame
+def missing_value_count(data, col_name):
+ return data[col_name].isnull().sum()
+#total missing values in "domestic_gross" column.
+missing_value_count(bom_movie_gross, 'domestic_gross')
+#total missing values in "foreign_gross" column.
+missing_value_count(bom_movie_gross, 'foreign_gross')
+9/15/23, 11:32 AM student - Jupyter Notebook
+localhost:8812/notebooks/student.ipynb# 3/12
+In [203]: 
+In [204]: 
+In [205]: 
+In [206]: 
+In [ ]: 
+In [207]: 
+In [208]: 
+In [209]: 
+Out[203]: 5
+Out[205]: title 0
+studio 0
+domestic_gross 0
+foreign_gross 0
+year 0
+dtype: int64
+Out[207]: False
+Out[208]: (2007, 5)
+Out[209]: count 2.007000e+03
+mean 4.701984e+08
+std 8.162689e+08
+min 4.000000e+03
+25% 6.700000e+06
+50% 1.670000e+08
+75% 5.605000e+08
+max 9.367000e+09
+Name: domestic_gross, dtype: float64
+#total missing values in "studio" column.
+missing_value_count(bom_movie_gross, 'studio')
+Since we can't be able to use the nulls we will have to drop them.
+bom_movie_gross.dropna(inplace=True)
+Confirm that we have no nulls.
+bom_movie_gross.isnull().sum()
+# Convert the 'year' column to datetime format
+pd.to_datetime(bom_movie_gross['year'])
+# Convert 'foreign_gross' and 'domestic_gross' columns to string type
+bom_movie_gross['foreign_gross'] = bom_movie_gross['foreign_gross'].astype(str)
+bom_movie_gross['domestic_gross'] = bom_movie_gross['domestic_gross'].astype(str)
+# Remove non-numeric characters and convert 'foreign_gross' and 'domestic_gross' to float type
+bom_movie_gross['foreign_gross'] = bom_movie_gross['foreign_gross'].str.replace('[A-Za-z]', '').st
+bom_movie_gross['domestic_gross'] = bom_movie_gross['domestic_gross'].str.replace('[A-Za-z]', '').
+We get rid of duplicate values and check the number of columns we have.
+# Check for duplicate values in the column 'title'
+bom_movie_gross.title.duplicated().any()
+#check dimensionality of our dataframe.
+bom_movie_gross.shape
+bom_movie_gross['domestic_gross'].describe()
+9/15/23, 11:32 AM student - Jupyter Notebook
+localhost:8812/notebooks/student.ipynb# 4/12
+In [210]: 
+In [211]: 
+In [212]: 
+In [213]: 
+Out[210]: count 2.007000e+03
+mean 7.579038e+07
+std 1.381796e+08
+min 1.010000e+00
+25% 3.900000e+06
+50% 1.940000e+07
+75% 7.595000e+07
+max 9.605000e+08
+Name: foreign_gross, dtype: float64
+Out[211]: count 2007
+unique 172
+top Uni.
+freq 144
+Name: studio, dtype: object
+bom_movie_gross['foreign_gross'].describe()
+bom_movie_gross['studio'].describe()
+# Visualization
+def compare_gross(data):
+ plt.figure(figsize=(12, 6))
+ plt.scatter(data['domestic_gross'], data['foreign_gross'], alpha=0.5)
+ plt.title('Comparison of Domestic Gross vs. Foreign Gross')
+ plt.xlabel('Domestic Gross')
+ plt.ylabel('Foreign Gross')
+ plt.grid(True)
+ plt.show()
+# Visualizing the comparison between 'domestic_gross' and 'foreign_gross'
+compare_gross(bom_movie_gross)
+# FINDINGS
+9/15/23, 11:32 AM student - Jupyter Notebook
+localhost:8812/notebooks/student.ipynb# 5/12
+Im.db
+In [219]: 
+In [220]: 
+In [221]: 
+In [222]: 
+In [223]: 
+Out[221]: ('tt0063540', 'Sunghursh', 'Sunghursh', 2013, 175.0, 'Action,Crime,Drama')
+Out[222]: ('tt10356526', 8.3, 31)
+There is a weak or nonexistent linear relationship between the performance of movies at the domestic
+box office and foreign box office perfomances.
+I was required to do a recommendation to microsoft on the type of films to create since they have
+decided to have a movie studio.
+In order to do this one is charged with exploring what type of films are currently doing the best
+in the box office.
+To achieve this we were given a dataset named Im.db.zip.
+I had to unzip it and stored it in a directory named data and the database file we are to use is
+im.db
+# Function to create a connection to the database
+def connect_to_database(database_name):
+ con = sqlite3.connect(database_name)
+ cur = con.cursor()
+ return con, cur
+database_name = "datas/im.db"
+con, cur = connect_to_database(database_name)
+Let's confirm if we can access the movie_basics table in the database.
+#Check if we have made the connection to movie_basics
+cur.execute("SELECT * FROM movie_basics")
+cur.fetchone()
+We also confirm whether we have access to movie_ratings table.
+# Check if we have made the connection to movie_ratings
+cur.execute("SELECT * FROM movie_ratings")
+cur.fetchone()
+# Data Exploration
+Now that we have the two tables we are going to need the following columns to analyze our data
+1.movie_id 
+2.original_title
+3.start_year
+4.runtime_minutes
+5.averagerating
+6.numvotes
+7.genres
+# Function to create a new table "movie_tables" by joining "movie_basics" and "movie_ratings"
+def create_movie_tables(cur):
+ cur.execute("""
+ CREATE TABLE movie_tables AS
+ SELECT movie_basics.movie_id, movie_basics.original_title, movie_basics.start_year, 
+ movie_basics.runtime_minutes, movie_ratings.averagerating, movie_ratings.numvotes, 
+ FROM movie_basics
+ JOIN movie_ratings ON movie_basics.movie_id = movie_ratings.movie_id
+ """)
+9/15/23, 11:32 AM student - Jupyter Notebook
+localhost:8812/notebooks/student.ipynb# 6/12
+In [224]: 
+In [225]: 
+In [226]: 
+In [228]: 
+In [229]: 
+In [230]: 
+In [231]: 
+Out[225]: ('tt0063540', 'Sunghursh', 2013, 175.0, 7.0, 77, 'Action,Crime,Drama')
+Number of rows in movie_tables: 73856
+Number of rows in movie_tables: 65720
+# Create "movie_tables" by joining "movie_basics" and "movie_ratings"
+create_movie_tables(cur)
+We confirm whether the table has been created and count the number of entries
+# Check if "movie_tables" has been created
+cur.execute("SELECT * FROM movie_tables")
+cur.fetchone()
+def count_rows_in_table(cur, table_name):
+ try:
+ # Execute a SQL query to count the rows in the specified table
+ cur.execute(f"SELECT COUNT(*) FROM {table_name}")
+ 
+ # Fetch the result of the count query
+ count = cur.fetchone()[0]
+ 
+ return count
+ 
+ except sqlite3.Error as e:
+ print(f"Error counting rows in {table_name}: {e}")
+ return None
+# Count the rows in the "movie_tables" table
+table_name = "movie_tables"
+row_count = count_rows_in_table(cur, table_name)
+if row_count is not None:
+ print(f"Number of rows in {table_name}: {row_count}")
+Next we remove all the null entries from our movie_tables
+# Function to remove rows with null values in specific columns
+def remove_null_rows(cur):
+ cur.execute("""
+ DELETE FROM movie_tables
+ WHERE movie_id IS NULL OR original_title IS NULL OR start_year IS NULL OR
+ runtime_minutes IS NULL OR averagerating IS NULL OR numvotes IS NULL OR genres IS NU
+ """)
+# Remove rows with null values
+remove_null_rows(cur)
+We confirm that the nulls are removed 
+# Count the rows in the "movie_tables" table
+table_name = "movie_tables"
+row_count = count_rows_in_table(cur, table_name)
+if row_count is not None:
+ print(f"Number of rows in {table_name}: {row_count}")
+# ANALYZE THE DATA
+9/15/23, 11:32 AM student - Jupyter Notebook
+localhost:8812/notebooks/student.ipynb# 7/12
+In [232]: 
+In [233]: 
+In [234]: 
+In [235]: 
+In [236]: 
+Out[233]: [('Exteriores: Mulheres Brasileiras na Diplomacia', 5),
+('The Dark Knight: The Ballad of the N Word', 5),
+('Freeing Bernie Baran', 5),
+('Hercule contre Hermès', 5),
+('I Was Born Yesterday!', 6)]
+Out[235]: [('Hito no sabaku', 449),
+('Kamifûsen', 489),
+('Kikkake wa You!', 21),
+('A Moment of Youth', 352),
+('Kodokuna wakusei', 433)]
+# ANALYZE THE DATA
+Question 1.
+Do we need to use the best rated movies?
+To answer this we take a look at the best rated movies
+# Function to get the top 5 movies with the highest average ratings
+def get_top_rated_movies(cur):
+ cur.execute("""
+ SELECT DISTINCT original_title, numvotes
+ FROM movie_tables
+ ORDER BY averagerating DESC
+ LIMIT 5
+ """)
+ return cur.fetchall()
+# Get the top 5 movies with the highest average ratings
+best_averagerating = get_top_rated_movies(cur)
+best_averagerating
+We also check for the lowest rated movies
+# Function to get the top 5 movies with the lowest average ratings
+def get_bottom_rated_movies(cur):
+ cur.execute("""
+ SELECT DISTINCT original_title, numvotes
+ FROM movie_tables
+ ORDER BY averagerating ASC
+ LIMIT 5
+ """)
+ return cur.fetchall()
+# Get the top 5 movies with the lowest average ratings
+worst_averagerating = get_bottom_rated_movies(cur)
+worst_averagerating
+Having got the result brings up another question
+Question 2 & 3
+Does the highest rated movie have the most votes?
+Does the lowest rated movie have the least votes?
+Since we are focused on the best we leave the latter for now.
+# Function to get the top 10 movies with the highest number of votes
+def get_most_voted_movies(cur):
+ cur.execute("""
+ SELECT DISTINCT *
+ FROM movie_tables
+ ORDER BY numvotes ASC
+ LIMIT 10
+ """)
+ return cur.fetchall()
+9/15/23, 11:32 AM student - Jupyter Notebook
+localhost:8812/notebooks/student.ipynb# 8/12
+In [237]: 
+In [244]: 
+In [245]: 
+Out[237]: [('tt0276568', 'To Chase a Million', 2018, 97.0, 7.4, 5, 'Action,Drama'),
+('tt0844699',
+"Ivan Mosjoukine ou L'enfant du carnaval",
+2016,
+67.0,
+9.0,
+5,
+'Documentary'),
+('tt10009602', 'Meu Nome é Daniel', 2018, 82.0, 8.0, 5, 'Documentary'),
+('tt10010134',
+"Versailles Rediscovered - The Sun King's Vanished Palace",
+2019,
+52.0,
+7.0,
+5,
+'Documentary'),
+('tt10011772', 'Balloons over Babylon', 2019, 70.0, 8.2, 5, 'Documentary'),
+('tt10043732', 'Oblepikhovoe leto', 2018, 87.0, 6.4, 5, 'Biography,Drama'),
+('tt10044934', 'Bumi Itu Bulat', 2019, 103.0, 6.6, 5, 'Drama'),
+('tt10073008', 'The Shadow of Gold', 2019, 78.0, 7.8, 5, 'Documentary'),
+('tt10125774', 'Mens', 2019, 97.0, 5.6, 5, 'Drama'),
+('tt10128580', 'White Mama', 2018, 97.0, 7.2, 5, 'Documentary')]
+(7.7, 568578),
+(7.8, 565563),
+(8.1, 560270),
+(7.0, 553751),
+(7.3, 553156),
+(7.9, 546284),
+(7.7, 544510),
+(6.9, 540996),
+(7.0, 539338),
+(7.0, 538720),
+(6.9, 538367),
+(8.2, 536181),
+(7.9, 535836),
+(7.7, 534683),
+(6.0, 533039),
+(8.1, 526273),
+(7.0, 525632),
+(7.8, 521495),
+(7.7, 519417),
+(7.5, 516998),
+# Get the top 10 movies with the highest number of votes
+most_voted_movies = get_most_voted_movies(cur)
+most_voted_movies
+Next we search the best voted for movies and we order them by the average rating they have.
+# Function to get the top 9 movies with the highest number of votes, ordered by average rating
+def get_highest_voted_movies(cur):
+ cur.execute("""
+ SELECT DISTINCT averagerating, numvotes
+ FROM movie_tables
+ ORDER BY numvotes DESC
+ 
+ """)
+ return cur.fetchall()
+# Get and print the top 9 movies with the highest number of votes, ordered by average rating
+highest_voted_movies = get_highest_voted_movies(cur)
+highest_voted_movies
+# Visualization
+9/15/23, 11:32 AM student - Jupyter Notebook
+localhost:8812/notebooks/student.ipynb# 9/12
+In [248]: 
+In [249]: 
+# Function to create a bar chart for the top 3 movies by number of votes
+def plot_top_movies_by_votes(data):
+ titles = [record[0] for record in data]
+ num_votes = [record[1] for record in data]
+ 
+ plt.figure(figsize=(10, 6))
+ plt.scatter(titles, num_votes, color='skyblue')
+ plt.ylabel('Number of Votes')
+ plt.xlabel('Average Rating')
+ plt.title('Movies by Number of Votes')
+ plt.tight_layout()
+ plt.show()
+# Create a bar chart for the top movies by number of votes
+plot_top_movies_by_votes(highest_voted_movies)
+# Finding
+The observation reveals that the highest number of votes corresponds to an average rating falling
+within the range of 5.9 to 8.3.
+Question 4
+What are the most watched genres?
+To answer this we further ask ourselves 2 other questions
+Question 4.1
+What are the best rated genres by average?
+9/15/23, 11:32 AM student - Jupyter Notebook
+localhost:8812/notebooks/student.ipynb# 10/12
+In [93]: 
+In [98]: 
+In [95]: 
+In [96]: 
+Out[98]: [('Comedy,Documentary,Fantasy', 9.4),
+('Documentary,Family,Musical', 9.3),
+('Game-Show', 9.0),
+('Drama,Short', 8.8),
+('Documentary,News,Sport', 8.8),
+('Documentary,News,Reality-TV', 8.8),
+('Action,Adventure,Musical', 8.7),
+('Biography,History,Music', 8.5),
+('Adventure,Crime', 8.5),
+('Mystery,News,Thriller', 8.4),
+('Music,Musical,Romance', 8.4),
+('Documentary,Music,War', 8.3),
+('Documentary,Fantasy,Mystery', 8.3),
+('Comedy,History,Musical', 8.3),
+('Biography,Family,History', 8.3)]
+Out[96]: [('Documentary', 51420.0),
+('Documentary', 14400.0),
+('Drama', 1440.0),
+('Comedy,History', 1100.0),
+('Drama,Fantasy,Musical', 808.0)]
+# Function to get the top 15 genres with the best average ratings
+def get_top_genres_by_average_rating(cur):
+ cur.execute("""
+ SELECT genres, ROUND(AVG(averagerating), 1) AS average_rating_per_genre
+ FROM movie_tables
+ GROUP BY genres
+ ORDER BY average_rating_per_genre DESC
+ LIMIT 15
+ """)
+ return cur.fetchall()
+# Get and print the top 15 genres with the best average ratings
+top_genres_by_average_rating = get_top_genres_by_average_rating(cur)
+top_genres_by_average_rating
+Question 4.2
+What is the watchtime of these genres?
+# Function to get the top 5 genres with the greatest runtime_minutes
+def get_top_genres_by_runtime(cur):
+ cur.execute("""
+ SELECT genres, runtime_minutes
+ FROM movie_tables
+ ORDER BY runtime_minutes DESC, averagerating DESC
+ LIMIT 5
+ """)
+ return cur.fetchall()
+# Get and print the top 5 genres with the greatest runtime_minutes
+top_genres_by_runtime = get_top_genres_by_runtime(cur)
+top_genres_by_runtime
+9/15/23, 11:32 AM student - Jupyter Notebook
+localhost:8812/notebooks/student.ipynb# 11/12
+In [99]: 
+In [100]: 
+In [101]: 
+# Function to create a bar chart for average ratings by genre
+def plot_average_ratings_by_genre(data):
+ genres = [row[0] for row in data]
+ average_ratings = [row[1] for row in data]
+ 
+ plt.figure(figsize=(10, 6))
+ plt.bar(genres, average_ratings)
+ plt.xlabel('Genres')
+ plt.ylabel('Average Ratings')
+ plt.title('Average Ratings by Genre')
+ plt.xticks(rotation=45)
+ plt.tight_layout()
+ plt.show()
+# Create a bar chart for average ratings by genre
+plot_average_ratings_by_genre(top_genres_by_average_rating)
+# Finding
+The analysis indicates that genres such as documentaries, comedy, fantasy, musical, and drama
+garnered the highest levels of appreciation based on their respective average ratings.
+# Close the database connection
+con.close()
+# RECOMMENDATIONS
+1.I recommend film industry professionals adopt a diversified international approach. This entails
+customizing marketing strategies and content localization for specific foreign markets, recognizing
+that success abroad may not mirror domestic performance, ultimately enhancing global distribution
+and revenue potential.
+9/15/23, 11:32 AM student - Jupyter Notebook
+localhost:8812/notebooks/student.ipynb# 12/12
+2.Decision-makers in the entertainment industry to concentrate their resources and promotional
+efforts on content that tends to receive average ratings between 5.9 and 8.3. This range appears to
+resonate most with audiences and is likely to yield greater viewer engagement and satisfaction.
+3.I recommend content creators prioritize genres like documentaries, comedy, fantasy, musical, and
+drama
+which consistently receive high average ratings, indicating strong audience engagement potential.
+Focusing on these genres can boost the success and impact of entertainment projects.
 
-You've made it all the way through the first phase of this course - take a minute to celebrate your awesomeness!
 
-![awesome](https://raw.githubusercontent.com/learn-co-curriculum/dsc-phase-1-project-v2-4/master/awesome.gif)
-
-Now you will put your new skills to use with a large end-of-Phase project!
-
-In this project description, we will cover:
-
-* [***Project Overview:***](#project-overview) the project goal, audience, and dataset
-* [***Deliverables:***](#deliverables) the specific items you are required to produce for this project
-* [***Grading:***](#grading) how your project will be scored
-* [***Getting Started:***](#getting-started) guidance for how to begin your first project
-
-## Project Overview
-
-For this project, you will use exploratory data analysis to generate insights for a business stakeholder.
-
-### Business Problem
-
-Microsoft sees all the big companies creating original video content and they want to get in on the fun. They have decided to create a new movie studio, but they don’t know anything about creating movies. You are charged with exploring what types of films are currently doing the best at the box office. You must then translate those findings into actionable insights that the head of Microsoft's new movie studio can use to help decide what type of films to create.
-
-### The Data
-
-In the folder `zippedData` are movie datasets from:
-
-* [Box Office Mojo](https://www.boxofficemojo.com/)
-* [IMDB](https://www.imdb.com/)
-* [Rotten Tomatoes](https://www.rottentomatoes.com/)
-* [TheMovieDB](https://www.themoviedb.org/)
-* [The Numbers](https://www.the-numbers.com/)
-
-Because it was collected from various locations, the different files have different formats. Some are compressed CSV (comma-separated values) or TSV (tab-separated values) files that can be opened using spreadsheet software or `pd.read_csv`, while the data from IMDB is located in a SQLite database.
-
-![movie data erd](https://raw.githubusercontent.com/learn-co-curriculum/dsc-phase-1-project-v2-4/master/movie_data_erd.jpeg)
-
-Note that the above diagram shows ONLY the IMDB data. You will need to look carefully at the features to figure out how the IMDB data relates to the other provided data files.
-
-It is up to you to decide what data from this to use and how to use it. If you want to make this more challenging, you can scrape websites or make API calls to get additional data. If you are feeling overwhelmed or behind, we recommend you use only the following data files:
-
-* `im.db.zip`
-  * Zipped SQLite database (you will need to unzip then query using SQLite)
-  * `movie_basics` and `movie_ratings` tables are most relevant
-* `bom.movie_gross.csv.gz`
-  * Compressed CSV file (you can open without expanding the file using `pd.read_csv`)
-
-### Key Points
-
-* **Your analysis should yield three concrete business recommendations.** The ultimate purpose of exploratory analysis is not just to learn about the data, but to help an organization perform better. Explicitly relate your findings to business needs by recommending actions that you think the business (Microsoft) should take.
-
-* **Communicating about your work well is extremely important.** Your ability to provide value to an organization - or to land a job there - is directly reliant on your ability to communicate with them about what you have done and why it is valuable. Create a storyline your audience (the head of Microsoft's new movie studio) can follow by walking them through the steps of your process, highlighting the most important points and skipping over the rest.
-
-* **Use plenty of visualizations.** Visualizations are invaluable for exploring your data and making your findings accessible to a non-technical audience. Spotlight visuals in your presentation, but only ones that relate directly to your recommendations. Simple visuals are usually best (e.g. bar charts and line graphs), and don't forget to format them well (e.g. labels, titles).
-
-## Deliverables
-
-There are three deliverables for this project:
-
-* A **non-technical presentation**
-* A **Jupyter Notebook**
-* A **GitHub repository**
-
-### Non-Technical Presentation
-
-The non-technical presentation is a slide deck presenting your analysis to business stakeholders.
-
-* ***Non-technical*** does not mean that you should avoid mentioning the technologies or techniques that you used, it means that you should explain any mentions of these technologies and avoid assuming that your audience is already familiar with them.
-* ***Business stakeholders*** means that the audience for your presentation is Microsoft, not the class or teacher. Do not assume that they are already familiar with the specific business problem, but also do not explain to them what Microsoft is.
-
-The presentation describes the project ***goals, data, methods, and results***. It must include at least ***three visualizations*** which correspond to ***three business recommendations***.
-
-We recommend that you follow this structure, although the slide titles should be specific to your project:
-
-1. Beginning
-    * Overview
-    * Business Understanding
-2. Middle
-    * Data Understanding
-    * Data Analysis
-3. End
-    * Recommendations
-    * Next Steps
-    * Thank You
-       * This slide should include a prompt for questions as well as your contact information (name and LinkedIn profile)
-
-You will give a live presentation of your slides and submit them in PDF format on Canvas. The slides should also be present in the GitHub repository you submit with a file name of `presentation.pdf`.
-
-The graded elements of the presentation are:
-
-* Presentation Content
-* Slide Style
-* Presentation Delivery and Answers to Questions
-
-See the [Grading](#grading) section for further explanation of these elements.
-
-For further reading on creating professional presentations, check out:
-
-* [Presentation Content](https://github.com/learn-co-curriculum/dsc-project-presentation-content)
-* [Slide Style](https://github.com/learn-co-curriculum/dsc-project-slide-design)
-
-### Jupyter Notebook
-
-The Jupyter Notebook is a notebook that uses Python and Markdown to present your analysis to a data science audience.
-
-* ***Python and Markdown*** means that you need to construct an integrated `.ipynb` file with Markdown (headings, paragraphs, links, lists, etc.) and Python code to create a well-organized, skim-able document.
-  * The notebook kernel should be restarted and all cells run before submission, to ensure that all code is runnable in order.
-  * Markdown should be used to frame the project with a clear introduction and conclusion, as well as introducing each of the required elements.
-* ***Data science audience*** means that you can assume basic data science proficiency in the person reading your notebook. This differs from the non-technical presentation.
-
-Along with the presentation, the notebook also describes the project ***goals, data, methods, and results***. It must include at least ***three visualizations*** which correspond to ***three business recommendations***.
-
-You will submit the notebook in PDF format on Canvas as well as in `.ipynb` format in your GitHub repository.
-
-The graded elements for the Jupyter Notebook are:
-
-* Business Understanding
-* Data Understanding
-* Data Preparation
-* Data Analysis
-* Visualization
-* Code Quality
-
-See the [Grading](#grading) section for further explanation of these elements.
-
-### GitHub Repository
-
-The GitHub repository is the cloud-hosted directory containing all of your project files as well as their version history.
-
-This repository link will be the project link that you include on your resume, LinkedIn, etc. for prospective employers to view your work. Note that we typically recommend that 3 links are highlighted (out of 5 projects) so don't stress too much about getting this one to be perfect! There will also be time after graduation for cosmetic touch-ups.
-
-A professional GitHub repository has:
-
-1. `README.md`
-    * A file called `README.md` at the root of the repository directory, written in Markdown; this is what is rendered when someone visits the link to your repository in the browser
-    * This file contains these sections:
-       * Overview
-       * Business Understanding
-          * Include stakeholder and key business questions
-       * Data Understanding and Analysis
-          * Source of data
-          * Description of data
-          * Three visualizations (the same visualizations presented in the slides and notebook)
-       * Conclusion
-          * Summary of conclusions including three relevant findings
-2. Commit history
-   * Progression of updates throughout the project time period, not just immediately before the deadline
-   * Clear commit messages
-   * Commits from all team members (if a group project)
-3. Organization
-   * Clear folder structure
-   * Clear names of files and folders
-   * Easily-located notebook and presentation linked in the README
-4. Notebook(s)
-   * Clearly-indicated final notebook that runs without errors
-   * Exploratory/working notebooks (can contain errors, redundant code, etc.) from all team members (if a group project)
-5. `.gitignore`
-   * A file called `.gitignore` at the root of the repository directory instructs Git to ignore large, unnecessary, or private files
-     * Because it starts with a `.`, you will need to type `ls -a` in the terminal in order to see that it is there
-   * GitHub maintains a [Python .gitignore](https://github.com/github/gitignore/blob/master/Python.gitignore) that may be a useful starting point for your version of this file
-   * To tell Git to ignore more files, just add a new line to `.gitignore` for each new file name
-     * Consider adding `.DS_Store` if you are using a Mac computer, as well as project-specific file names
-     * If you are running into an error message because you forgot to add something to `.gitignore` and it is too large to be pushed to GitHub [this blog post](https://medium.com/analytics-vidhya/tutorial-removing-large-files-from-git-78dbf4cf83a?sk=c3763d466c7f2528008c3777192dfb95)(friend link) should help you address this
-
-You wil submit a link to the GitHub repository on Canvas.
-
-See the [Grading](#grading) section for further explanation of how the GitHub repository will be graded.
-
-For further reading on creating professional notebooks and `README`s, check out [this reading](https://github.com/learn-co-curriculum/dsc-repo-readability-v2-2).
-
-## Grading
-
-***To pass this project, you must pass each project rubric objective.*** The project rubric objectives for Phase 1 are:
-
-1. Attention to Detail
-2. Data Communication
-3. Authoring Jupyter Notebooks
-4. Data Manipulation and Analysis with `pandas`
-
-### Attention to Detail
-
-If you have searched for a job, you have probably seen "attention to detail" appear on a job description. In a [survey of hiring managers](https://www.payscale.com/data-packages/job-skills), fully 56% of them said they felt that recent college grads lacked this skill. So, what does "attention to detail" mean, and how will you be graded on it at Flatiron School?
-
-Attention to detail means that you accomplish tasks thoroughly and accurately. You need to understand what is being asked of you, and double-check that your work fulfills all of the requirements. This will help make you a "no-brainer hire" because it helps employers feel confident that they will not have to double-check your work. For further reading, check out [this article](https://www.indeed.com/career-advice/career-development/attention-to-detail) from Indeed.
-
-***Attention to detail will be graded based on the project checklist. In Phase 1, you need to complete 60% (6 out of 10) or more of the checklist elements in order to pass the Attention to Detail objective.*** The standard for passing the Attention to Detail objective will increase with each Phase, until you are required to complete all elements to pass Phase 5 (Capstone).
-
-The [Phase 1 Project Checklist](https://docs.google.com/document/d/1PjJwdek9EeIy9tYdvlC4bvKvwYcI2xHO1wEMENfqo5E/edit?usp=sharing) is linked here as well as directly in Canvas. The elements highlighted in yellow are the elements you need to complete in order to pass this objective. We recommend that you make your own copy of this document, so that you can check off each element as you complete it. The checklist also contains more specific, detailed guidance about the deliverables described above.
-
-Below are the definitions of each rubric level for this objective. This information is also summarized in the rubric, which is attached to the project submission assignment.
-
-#### Exceeds Objective
-70% or more of the project checklist items are complete
-
-#### Meets Objective (Passing Bar)
-60% of the project checklist items are complete
-
-#### Approaching Objective
-50% of the project checklist items are complete
-
-#### Does Not Meet Objective
-40% or fewer of the project checklist items are complete
-
-### Data Communication
-
-Communication is another key "soft skill". In [the same survey mentioned above](https://www.payscale.com/data-packages/job-skills), 46% of hiring managers said that recent college grads were missing this skill.
-
-Because "communication" can encompass such a wide range of contexts and skills, we will specifically focus our Phase 1 objective on Data Communication. We define Data Communication as:
-
-> Communicating basic data analysis results to diverse audiences via writing and live presentation
-
-To further define some of these terms:
-
-* By "basic data analysis" we mean that you are filtering, sorting, grouping, and/or aggregating the data in order to answer business questions. This project does not involve inferential statistics or machine learning, although descriptive statistics such as measures of central tendency are encouraged.
-* By "results" we mean your ***three visualizations and recommendations***.
-* By "diverse audiences" we mean that your presentation and notebook are appropriately addressing a business and data science audience, respectively.
-
-Below are the definitions of each rubric level for this objective. This information is also summarized in the rubric, which is attached to the project submission assignment.
-
-#### Exceeds Objective
-Creates and describes appropriate visualizations for given business questions, where each visualization fulfills all elements of the checklist
-
-> This "checklist" refers to the Data Visualization checklist within the larger Phase 1 Project Checklist
-
-#### Meets Objective (Passing Bar)
-Creates and describes appropriate visualizations for given business questions
-
-> This objective can be met even if all checklist elements are not fulfilled. For example, if there is some illegible text in one of your visualizations, you can still meet this objective
-
-#### Approaching Objective
-Creates visualizations that are not related to the business questions, or uses an inappropriate type of visualization
-
-> Even if you create very compelling visualizations, you cannot pass this objective if the visualizations are not related to the business questions
-
-> An example of an inappropriate type of visualization would be using a line graph to show the correlation between two independent variables, when a scatter plot would be more appropriate
-
-#### Does Not Meet Objective
-Does not submit the required number of visualizations
-
-### Authoring Jupyter Notebooks
-
-According to [Kaggle's 2020 State of Data Science and Machine Learning Survey](https://www.kaggle.com/kaggle-survey-2020), 74.1% of data scientists use a Jupyter development environment, which is more than twice the percentage of the next-most-popular IDE, Visual Studio Code. Jupyter Notebooks allow for reproducible, skim-able code documents for a data science audience. Comfort and skill with authoring Jupyter Notebooks will prepare you for job interviews, take-home challenges, and on-the-job tasks as a data scientist.
-
-The key feature that distinguishes *authoring Jupyter Notebooks* from simply *writing Python code* is the fact that Markdown cells are integrated into the notebook along with the Python cells in a notebook. You have seen examples of this throughout the curriculum, but now it's time for you to practice this yourself!
-
-Below are the definitions of each rubric level for this objective. This information is also summarized in the rubric, which is attached to the project submission assignment.
-
-#### Exceeds Objective
-Uses Markdown and code comments to create a well-organized, skim-able document that follows all best practices
-
-> Refer to the [repository readability reading](https://github.com/learn-co-curriculum/dsc-repo-readability-v2-2) for more tips on best practices
-
-#### Meets Objective (Passing Bar)
-Uses some Markdown to create an organized notebook, with an introduction at the top and a conclusion at the bottom
-
-#### Approaching Objective
-Uses Markdown cells to organize, but either uses only headers and does not provide any explanations or justifications, or uses only plaintext without any headers to segment out sections of the notebook
-
-> Headers in Markdown are delineated with one or more `#`s at the start of the line. You should have a mixture of headers and plaintext (text where the line does not start with `#`)
-
-#### Does Not Meet Objective
-Does not submit a notebook, or does not use Markdown cells at all to organize the notebook
-
-### Data Manipulation and Analysis with `pandas`
-
-`pandas` is a very popular data manipulation library, with over 2 million downloads on Anaconda (`conda install pandas`) and over 19 million downloads on PyPI (`pip install pandas`) at the time of this writing. In our own internal data, we see that the overwhelming majority of Flatiron School DS grads use `pandas` on the job in some capacity.
-
-Unlike in base Python, where the Zen of Python says "There should be one-- and preferably only one --obvious way to do it", there is often more than one valid way to do something in `pandas`. However there are still more efficient and less efficient ways to use it. Specifically, the best `pandas` code is *performant* and *idiomatic*.
-
-Performant `pandas` code utilizes methods and broadcasting rather than user-defined functions or `for` loops. For example, if you need to strip whitespace from a column containing string data, the best approach would be to use the [`pandas.Series.str.strip` method](https://pandas.pydata.org/docs/reference/api/pandas.Series.str.strip.html) rather than writing your own function or writing a loop. Or if you want to multiply everything in a column by 100, the best approach would be to use broadcasting (e.g. `df["column_name"] * 100`) instead of a function or loop. You can still write your own functions if needed, but only after checking that there isn't a built-in way to do it.
-
-Idiomatic `pandas` code has variable names that are meaningful words or abbreviations in English, that are related to the purpose of the variables. You can still use `df` as the name of your DataFrame if there is only one main DataFrame you are working with, but as soon as you are merging multiple DataFrames or taking a subset of a DataFrame, you should use meaningful names. For example, `df2` would not be an idiomatic name, but `movies_and_reviews` could be.
-
-We also recommend that you rename all DataFrame columns so that their meanings are more understandable, although it is fine to have acronyms. For example, `"col1"` would not be an idiomatic name, but `"USD"` could be.
-
-Below are the definitions of each rubric level for this objective. This information is also summarized in the rubric, which is attached to the project submission assignment.
-
-#### Exceeds Objective
-Uses `pandas` to prepare data and answer business questions in an idiomatic, performant way
-
-#### Meets Objective (Passing Bar)
-Successfully uses `pandas` to prepare data in order to answer business questions
-
-> This includes projects that _occasionally_ use base Python when `pandas` methods would be more appropriate (such as using `enumerate()` on a DataFrame), or occasionally performs operations that do not appear to have any relevance to the business questions
-
-#### Approaching Objective
-Uses `pandas` to prepare data, but makes significant errors
-
-> Examples of significant errors include: the result presented does not actually answer the stated question, the code produces errors, the code _consistently_ uses base Python when `pandas` methods would be more appropriate, or the submitted notebook contains significant quantities of code that is unrelated to the presented analysis (such as copy/pasted code from the curriculum or StackOverflow)
-
-#### Does Not Meet Objective
-Unable to prepare data using `pandas`
-
-> This includes projects that successfully answer the business questions, but do not use `pandas` (e.g. use only base Python, or use some other tool like R, Tableau, or Excel)
-
-## Getting Started
-
-Please start by reviewing the contents of this project description. If you have any questions, please ask your instructor ASAP.
-
-Next, you will need to complete the [***Project Proposal***](#project_proposal) which must be reviewed by your instructor before you can continue with the project.
-
-Then, you will need to create a GitHub repository. There are three options:
-
-1. Look at the [Phase 1 Project Templates and Examples repo](https://github.com/learn-co-curriculum/dsc-project-template) and follow the directions in the MVP branch.
-2. Fork the [Phase 1 Project Repository](https://github.com/learn-co-curriculum/dsc-phase-1-project-v2-4), clone it locally, and work in the `student.ipynb` file. Make sure to also add and commit a PDF of your presentation to your repository with a file name of `presentation.pdf`.
-3. Create a new repository from scratch by going to [github.com/new](https://github.com/new) and copying the data files from one of the above resources into your new repository. This approach will result in the most professional-looking portfolio repository, but can be more complicated to use. So if you are getting stuck with this option, try one of the above options instead.
-
-## Summary
-
-This project will give you a valuable opportunity to develop your data science skills using real-world data. The end-of-phase projects are a critical part of the program because they give you a chance to bring together all the skills you've learned, apply them to realistic projects for a business stakeholder, practice communication skills, and get feedback to help you improve. You've got this!
